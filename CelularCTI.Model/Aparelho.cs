@@ -50,7 +50,15 @@ namespace CelularCTI.Model.Entidades
                     throw new Exception("O campo Preço do Produto deve ser maior que zero !!!");
             }  
         }
-        public decimal Desconto { get; set;}
+        public decimal Desconto { get; set; }
+
+        public override string ToString()
+        {
+            return Fabricante.Nome.PadLeft(12) + " " + 
+                              Modelo.PadRight(25) + " " + 
+                              Preco.ToString("C").PadLeft(20) +
+                              "      (" + Quantidade + " em estoque)";
+        }
 
     }
 }

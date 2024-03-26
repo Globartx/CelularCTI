@@ -28,7 +28,7 @@ namespace CelularCTI.Model.Entidades
             Aparelho a = new Aparelho();
             a.Id_Aparelho = Convert.ToInt64(dtr["id_aparelho"]);
             a.Modelo = (String)dtr["modelo"];
-            a.Quantidade = (double)dtr["quantidade"];
+            a.Quantidade = (double)(dtr["quantidade"]);
             a.Largura = (double)(dtr["largura"]);
             a.Altura = (double)(dtr["altura"]);
             a.Espessura = (double)(dtr["espessura"]);
@@ -143,6 +143,29 @@ namespace CelularCTI.Model.Entidades
             return aparelho;
         }
 
+        public static List<Aparelho> BuscarAparelho()
+        {
+            string sql;
+            List<Aparelho> aparelho = new List<Aparelho>();
+
+            sql = "SELECT aparelho.*, fabricante.* " +
+                "FROM aparelho INNER JOIN fabricante " +
+                "ON aparelho.id_fabricante = fabricante.id_fabricante " +
+                "ORDER BY aparelho.modelo";
+
+            NpgsqlDataReader dtr = ConexaoBanco.Selecionar(sql);
+            while (dtr.Read())
+                aparelho.Add(ObjAparelho(ref dtr));
+            dtr.Close();
+
+            return aparelho;
+        }
+
+        //public static List<Aparelho> ListaPreco()
+        //{
+        //
+        //}
+
         public static List<Aparelho> BuscarAparelho(decimal precoMin, 
                                                     decimal precoMax)
         {
@@ -167,30 +190,7 @@ namespace CelularCTI.Model.Entidades
             return aparelho;
         }
 
-        public static List<Aparelho> BuscarAparelhos(String modelo)
-        {
-            List<Aparelho> aparelhos = new List<Aparelho>();
-            NpgsqlDataReader dtr = ConexaoBanco.Selecionar(
-                "SELECT * FROM aparelho WHERE modelo LIKE '%" + modelo + "%'");
-            while (dtr.Read())
-                aparelhos.Add(ObjAparelho(ref dtr));
-            dtr.Close();
-            return aparelhos;
-        }
-
-        public static List<Aparelho> BuscarAparelhos(float precoMin, 
-                                                        float precoMax)
-        {
-            List<Aparelho> aparelhos = new List<Aparelho>();
-            NpgsqlDataReader dtr = ConexaoBanco.Selecionar(
-                "SELECT * FROM aparelho WHERE preco between " + precoMin + " and " + precoMax);
-            while (dtr.Read())
-                aparelhos.Add(ObjAparelho(ref dtr));
-            dtr.Close();
-            return aparelhos;
-        }
-
-        public static List<Aparelho> BuscarAparelhos(Fabricante f)
+        public static List<Aparelho> BuscarAparelho(Fabricante f)
         {
             List<Aparelho> aparelhos = new List<Aparelho>();
             NpgsqlDataReader dtr = ConexaoBanco.Selecionar(
